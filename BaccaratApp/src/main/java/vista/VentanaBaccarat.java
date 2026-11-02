@@ -8,16 +8,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class VentanaBaccarat {
-    private final Scanner scanner;
-    private final ConexionBD conexionBD;
-    private final GestionBaccarat juego;
+    private final Scanner scanner = new Scanner(System.in);
+    private final ConexionBD conexionBD = new ConexionBD();
+    private final GestionBaccarat juego = new GestionBaccarat();
     private Usuario usuarioActual;
-
-    public VentanaBaccarat() {
-        this.scanner = new Scanner(System.in);
-        this.conexionBD = new ConexionBD();
-        this.juego = new GestionBaccarat();
-    }
 
     public void iniciar() {
         System.out.println("==========================================");
@@ -77,18 +71,39 @@ public class VentanaBaccarat {
         double monto = Double.parseDouble(scanner.nextLine());
 
         if (monto <= 0 || monto > usuarioActual.getSaldo()) {
-            System.out.println("Monto inválido.");
+            System.out.println("Monto inválido o saldo insuficiente.");
             return;
         }
 
+        // Repartir manos iniciales
         juego.repartirManosIniciales();
+
+        System.out.println("\nRepartiendo cartas iniciales...");
+        System.out.print("Presiona [Enter] para ver las cartas en la mesa...");
+        scanner.nextLine();
+
+        System.out.println("\n================================================================");
+        System.out.println("🎴 CARTAS REPARTIDAS EN LA MESA:");
+        System.out.println("================================================================");
+
+        System.out.println("▶ Mano del Jugador:");
+        DibujadorAscii.dibujarCartas(juego.getManoJugador().getCartas());
+
+        System.out.println("\n▶ Mano de la Banca:");
+        DibujadorAscii.dibujarCartas(juego.getManoBanca().getCartas());
+        System.out.println("================================================================");
+
+        // Pausa para calcular tercera carta
+        System.out.print("\nPresiona [Enter] para aplicar reglas de la tercera carta y ver el resultado...");
+        scanner.nextLine();
+
         juego.ejecutarReglasTerceraCarta();
 
+        // Lógica de resultados
         String resultado = juego.determinarGanador();
-
         System.out.println("\n--- RESULTADO DE LA MANO ---");
-        System.out.println("Jugador (" + juego.getManoJugador().calcularPuntaje() + " pts): " + juego.getManoJugador().getCartas());
-        System.out.println("Banca (" + juego.getManoBanca().calcularPuntaje() + " pts): " + juego.getManoBanca().getCartas());
+        System.out.println("Jugador (" + juego.getManoJugador().calcularPuntaje() + " pts)");
+        System.out.println("Banca (" + juego.getManoBanca().calcularPuntaje() + " pts)");
         System.out.println("Ganador de la ronda: " + resultado);
 
         double ganancia = 0;
@@ -96,15 +111,18 @@ public class VentanaBaccarat {
 
         if (tipoApuesta.name().equals(resultado)) {
             estado = "GANADO";
-            if (tipoApuesta == TipoApuesta.JUGADOR) ganancia = monto * 1.0;
-            else if (tipoApuesta == TipoApuesta.BANCA) ganancia = monto * 0.95;
-            else if (tipoApuesta == TipoApuesta.EMPATE) ganancia = monto * 8.0;
-
+            if (tipoApuesta == TipoApuesta.JUGADOR) {
+                ganancia = monto * 1.0;
+            } else if (tipoApuesta == TipoApuesta.BANCA) {
+                ganancia = monto * 0.95;
+            } else if (tipoApuesta == TipoApuesta.EMPATE) {
+                ganancia = monto * 8.0;
+            }
             usuarioActual.setSaldo(usuarioActual.getSaldo() + ganancia);
             System.out.println("¡GANASTE! Ganancia: $" + ganancia);
-        } else if (resultado.equals("EMPATE") && tipoApuesta != TipoApuesta.EMPATE) {
+        } else if (resultado.equals("EMPATE")) {
             estado = "EMPATE";
-            ganancia = 0;
+            ganancia = 0.0;
             System.out.println("Empate. Se reembolsa tu apuesta.");
         } else {
             estado = "PERDIDO";
@@ -113,8 +131,12 @@ public class VentanaBaccarat {
             System.out.println("Has perdido $" + monto);
         }
 
+        // Actualización de base de datos
         conexionBD.actualizarSaldo(usuarioActual.getId(), usuarioActual.getSaldo());
         conexionBD.registrarPartida(usuarioActual.getId(), tipoApuesta, monto, resultado, estado, ganancia);
+
+        System.out.print("\nPresiona [Enter] para volver al menú principal...");
+        scanner.nextLine();
     }
 
     private void mostrarReporte() {
