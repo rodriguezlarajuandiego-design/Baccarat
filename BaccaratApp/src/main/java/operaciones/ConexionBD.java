@@ -9,19 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConexionBD {
-    private static final String URL = "jdbc:postgresql://localhost:5432/baccarat_db";
+    private static final String URL = "jdbc:postgresql://db.svkrucvysievwqovmjm.supabase.co:5432/postgres?sslmode=require";
     private static final String USUARIO = "postgres";
-    private static final String CLAVE = "postgres";
+    private static final String CLAVE = "Juan1150185216";
 
     public Connection conectar() throws SQLException {
         return DriverManager.getConnection(URL, USUARIO, CLAVE);
     }
 
     public Usuario obtenerOCrearUsuario(String nombre) {
-        String querySelect = "SELECT id, nombre, saldo FROM usuarios WHERE nombre = ?";
-        String queryInsert = "INSERT INTO usuarios (nombre, saldo) VALUES (?, 1000.00) RETURNING id, saldo";
+        String querySelect = "SELECT id, nombre, saldo FROM usuario WHERE nombre = ?";
+        String queryInsert = "INSERT INTO usuario (nombre, saldo) VALUES (?, 1000.00) RETURNING id, saldo";
 
         try (Connection conn = conectar()) {
+
             try (PreparedStatement pstmt = conn.prepareStatement(querySelect)) {
                 pstmt.setString(1, nombre);
                 ResultSet rs = pstmt.executeQuery();
@@ -38,6 +39,7 @@ public class ConexionBD {
             }
         } catch (SQLException e) {
             System.err.println("Error en BD: " + e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototipo Baccarat UI</title>
+    <style>
+        :root {
+            --bg-color: #0b1d13;
+            --felt-green: #14402b;
+            --gold: #d4af37;
+            --gold-dark: #aa8c2c;
+            --white: #f8fafc;
+            --card-red: #e63946;
+            --panel-bg: rgba(15, 23, 42, 0.85);
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-color);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: var(--gold);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .table-felt {
+            background: var(--felt-green);
+            border: 12px solid #332211;
+            border-radius: 120px;
+            width: 100%;
+            max-width: 850px;
+            padding: 30px;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+        .cards-area {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+        .side {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            width: 38%;
+        }
+        .side h2 {
+            margin: 0 0 10px 0;
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            min-height: 90px;
+        }
+        .card {
+            width: 60px;
+            height: 85px;
+            background: white;
+            color: black;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+        }
+        .card.red { color: var(--card-red); }
+        .bet-options {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+        .bet-box {
+            flex: 1;
+            max-width: 200px;
+            padding: 15px;
+            text-align: center;
+            border: 2px dashed var(--gold);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .bet-box:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .btn {
+            background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: 12px 30px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .btn:hover { opacity: 0.9; }
+        .status-panel {
+            margin-top: 25px;
+            background: var(--panel-bg);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Mesa de Baccarat (Prototipo UI)</h1>
+<div class="subtitle">BaccaratApp - Vista Previa de la Interfaz</div>
+
+<div class="table-felt">
+    <div class="cards-area">
+        <div class="side">
+            <h2>JUGADOR</h2>
+            <div class="cards-container">
+                <div class="card red">♥ 8</div>
+                <div class="card">♠ K</div>
+            </div>
+        </div>
+        <div class="side">
+            <h2>BANQUERO</h2>
+            <div class="cards-container">
+                <div class="card">♣ 9</div>
+                <div class="card red">♦ A</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bet-options">
+        <div class="bet-box">
+            <h3>JUGADOR</h3>
+            <p>Paga 1 a 1</p>
+        </div>
+        <div class="bet-box">
+            <h3>EMPATE</h3>
+            <p>Paga 8 a 1</p>
+        </div>
+        <div class="bet-box">
+            <h3>BANQUERO</h3>
+            <p>Paga 0.95 a 1</p>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn">REPARTIR</button>
+        <button class="btn" style="background: #475569; color: white;">LIMPIAR</button>
+    </div>
+</div>
+
+<div class="status-panel">
+    <div>Usuario: <strong>Juan Lara</strong></div>
+    <div>Saldo: <strong style="color: #4ade80;">$1,000.00</strong></div>
+</div>
+
+</body>
+</html>
