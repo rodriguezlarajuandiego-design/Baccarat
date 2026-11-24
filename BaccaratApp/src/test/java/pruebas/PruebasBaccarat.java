@@ -19,7 +19,7 @@ public class PruebasBaccarat {
     @Test
     public void testValoresCartasBaccarat() {
         Carta as = new Carta(Palo.CORAZONES, "A");
-        Carta rey = new Carta(Picas, "K");
+        Carta rey = new Carta(Palo.PICAS, "K");
         Carta siete = new Carta(Palo.DIAMANTES, "7");
 
         assertEquals(1, as.getValorBaccarat());

@@ -4,17 +4,18 @@ import datos.Usuario;
 import datos.TipoApuesta;
 import datos.ReporteDiario;
 
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConexionBD {
-    private static final String URL = "jdbc:postgresql://db.svkrucvysievwqovmjm.supabase.co:5432/postgres?sslmode=require";
-    private static final String USUARIO = "postgres";
-    private static final String CLAVE = "Juan1150185216";
+    String url = "jdbc:h2:file:C:/Users/USUARIO/OneDrive - Universidad Distrital Francisco José de Caldas/Documentos/java/BaccaratApp/baccaratdb";
+    String user = "";
+    String password = "";
 
     public Connection conectar() throws SQLException {
-        return DriverManager.getConnection(URL, USUARIO, CLAVE);
+        return DriverManager.getConnection(url, user, password);
     }
 
     public Usuario obtenerOCrearUsuario(String nombre) {
