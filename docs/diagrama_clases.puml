@@ -1,0 +1,122 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+package "vista" {
+  class MenuPrincipal {
+    - controlador: ControladorJuego
+    + mostrarMenuLogin(): void
+    + mostrarMenuJuego(): void
+    + solicitarApuesta(): void
+    + mostrarResultadoRonda(partida: Partida): void
+    + mostrarHistorial(): void
+  }
+}
+
+package "operaciones" {
+  class ControladorJuego {
+    - mazo: Mazo
+    - reglas: ReglasBaccarat
+    - gestorApuestas: GestorApuestas
+    - usuarioDAO: UsuarioDAO
+    - partidaDAO: PartidaDAO
+    - usuarioActual: Usuario
+    + autenticarUsuario(user: String, pass: String): boolean
+    + registrarUsuario(user: String, pass: String): boolean
+    + jugarRonda(tipoApuesta: String, monto: double): Partida
+    + consultarHistorial(): List<Partida>
+  }
+
+  class Mazo {
+    - cartas: List<Carta>
+    + inicializarMazo(): void
+    + barajar(): void
+    + repartirCarta(): Carta
+  }
+
+  class ReglasBaccarat {
+    + evaluarNatural(jugador: Mano, banca: Mano): boolean
+    + requiereTerceraCartaJugador(jugador: Mano): boolean
+    + requiereTerceraCartaBanca(banca: Mano, terceraJugador: Carta): boolean
+    + determinarGanador(jugador: Mano, banca: Mano): String
+  }
+
+  class GestorApuestas {
+    + validarApuesta(saldoActual: double, monto: double): boolean
+    + calcularPago(tipoApuesta: String, ganador: String, monto: double): double
+  }
+}
+
+package "datos" {
+  class Usuario {
+    - idUsuario: int
+    - nombreUsuario: String
+    - contrasena: String
+    - saldo: double
+    + actualizarSaldo(monto: double): void
+  }
+
+  class Partida {
+    - idPartida: int
+    - idUsuario: int
+    - tipoApuesta: String
+    - montoApostado: double
+    - ganador: String
+    - gananciaNeta: double
+    - fecha: LocalDateTime
+  }
+
+  class Mano {
+    - cartas: List<Carta>
+    - esBanca: boolean
+    + agregarCarta(carta: Carta): void
+    + calcularPuntaje(): int
+    + esNatural(): boolean
+    + limpiarMano(): void
+  }
+
+  class Carta {
+    - palo: String
+    - valorNominal: String
+    - puntos: int
+    + getPuntos(): int
+  }
+
+  class ConexionBD {
+    - URL: String
+    - USER: String
+    - PASSWORD: String
+    + conectar(): Connection
+    + desconectar(): void
+  }
+
+  class UsuarioDAO {
+    + registrar(usuario: Usuario): boolean
+    + iniciarSesion(user: String, pass: String): Usuario
+    + actualizarSaldo(idUsuario: int, nuevoSaldo: double): boolean
+  }
+
+  class PartidaDAO {
+    + guardarPartida(partida: Partida): boolean
+    + obtenerHistorialPorUsuario(idUsuario: int): List<Partida>
+  }
+}
+
+MenuPrincipal --> ControladorJuego
+ControladorJuego *-- Mazo
+ControladorJuego *-- ReglasBaccarat
+ControladorJuego *-- GestorApuestas
+ControladorJuego --> UsuarioDAO
+ControladorJuego --> PartidaDAO
+ControladorJuego o-- Usuario
+
+Mazo "1" *-- "52" Carta
+Mano "1" *-- "0..3" Carta
+Usuario "1" -- "0..*" Partida
+
+UsuarioDAO ..> ConexionBD
+PartidaDAO ..> ConexionBD
+UsuarioDAO ..> Usuario
+PartidaDAO ..> Partida
+ReglasBaccarat ..> Mano
+@enduml
